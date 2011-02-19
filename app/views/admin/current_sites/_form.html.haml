@@ -48,3 +48,11 @@
       - if account != current_admin
         %span.actions
           = link_to image_tag('admin/form/icons/trash.png'), admin_membership_url(membership), :class => 'remove first', :confirm => t('admin.messages.confirm'), :method => :delete
+
+= f.foldable_inputs :name => :haml_sass, :class => 'haml_sass' do
+
+  = f.custom_input :haml_enabled, :css => 'toggle' do
+    = f.check_box :haml_enabled
+
+  = f.custom_input :sass_enabled, :css => 'toggle' do
+    = f.check_box :sass_enabled

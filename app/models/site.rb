@@ -8,6 +8,8 @@ class Site
   field :domains, :type => Array, :default => []
   field :meta_keywords
   field :meta_description
+  field :haml_enabled, :type => Boolean, :default => false
+  field :sass_enabled, :type => Boolean, :default => false
 
   ## associations ##
   references_many :pages
