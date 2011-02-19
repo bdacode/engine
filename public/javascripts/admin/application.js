@@ -18,7 +18,7 @@ $.growl.settings.dockCss = {
 
 /* ___ codemirror ___ */
 
-var addCodeMirrorEditor = function(type, el, parser) {
+var addCodeMirrorEditor = function(type, el, parser, reindent) {
   parser = (parser || 'Liquid') + 'Parser';
 
   var editor = CodeMirror.fromTextArea(el.attr('id'), {
@@ -30,7 +30,7 @@ var addCodeMirrorEditor = function(type, el, parser) {
       "/stylesheets/admin/plugins/codemirror/liquidcolors.css"],
     basefiles: '/javascripts/admin/plugins/codemirror/codemirror_base.min.js',
     continuousScanning: 500,
-    reindentOnLoad: true,
+    reindentOnLoad: (reindent != false),
     initCallback: function(editor) {
       jQuery(editor.frame.contentDocument).keydown(function(event) {
         jQuery(document).trigger(event);
@@ -90,6 +90,8 @@ $(document).ready(function() {
 
   // nifty code editor
   $('code.html textarea').each(function() { addCodeMirrorEditor('liquid', $(this)); });
+
+  $('code.haml textarea').each(function() { addCodeMirrorEditor('liquid', $(this), null, false); });
 
   // save form in AJAX
   $('form.save-with-shortcut').saveWithShortcut();
