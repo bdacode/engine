@@ -11,6 +11,7 @@ module Models
           field :snippet_dependencies, :type => Array, :default => []
 
           attr_reader :template_changed
+          attr_accessor :raw_haml_template
 
           before_validation :serialize_template
           after_save :update_template_descendants
@@ -38,8 +39,12 @@ module Models
                 self._parse_and_serialize_template
               rescue ::Liquid::SyntaxError => error
                 @parsing_errors << :liquid_syntax
+                self.raw_template = raw_haml_template
               rescue ::Locomotive::Liquid::PageNotFound => error
                 @parsing_errors << :liquid_extend
+                self.raw_template = raw_haml_template
+              rescue => error
+                @parsing_errors << error.message
               end
             end
           end
@@ -60,12 +65,22 @@ module Models
 
             context = default_context.merge(context)
 
+            if site.haml_enabled?
+              self.raw_haml_template = raw_template
+              self.raw_template = Haml::Engine.new(raw_template).render
+            end
+
             @template = ::Liquid::Template.parse(self.raw_template, context)
 
             self.template_dependencies = context[:templates]
             self.snippet_dependencies = context[:snippets]
 
             @template.root.context.clear
+
+            if site.haml_enabled?
+              self.raw_template = raw_haml_template
+            end
+
           end
 
           def template_must_be_valid
