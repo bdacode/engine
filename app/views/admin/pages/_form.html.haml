@@ -34,7 +34,7 @@
 = f.foldable_inputs :name => :raw_template do
   = f.custom_input :value, :css => 'code full', :with_label => false do
     = f.label :raw_template
-    %code{ :class => 'html' }
+    %code{ :class => "#{@page.site.haml_enabled? ? 'haml' : 'html'}" }
       = f.text_area :raw_template
     = f.errors_on :template
     .more

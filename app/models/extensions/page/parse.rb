@@ -45,6 +45,7 @@ module Models
                 self.raw_template = raw_haml_template
               rescue => error
                 @parsing_errors << error.message
+                self.raw_template = raw_haml_template
               end
             end
           end
